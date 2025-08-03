@@ -4,6 +4,6 @@ from product import views
 
 
 urlpatterns = [
-    path('<int:pk>/',views.view_category, name='view-specific-category'),
-    path('nothing/',views.view_nothing),
+    path('<int:pk>/',views.view_specific_category, name='view-specific-category'),
+    path('',views.view_categoreis, name = 'view-categories'),
 ]

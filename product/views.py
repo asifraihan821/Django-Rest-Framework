@@ -23,14 +23,15 @@ def view_all_product(request):
         product = Product.objects.select_related('category').all()
         serializer = ProductSerializer(product, many=True,context={'request':request})
         return Response(serializer.data)
+    
     if request.method == 'POST':
         serializer = ProductSerializer(data=request.data,context={'request':request})
-        if serializer.is_valid():
-            print(serializer._validated_data)
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        print(serializer._validated_data)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view()
@@ -46,11 +47,12 @@ def view_categoreis(request):
         categories = Category.objects.annotate(product_count=Count('products')).all()
         serializer = CategorySerializer(categories,many=True)
         return Response(serializer.data)
+    
     if request.method == 'POST':
         serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            print(serializer._validated_data)
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        else :
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        print(serializer._validated_data)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

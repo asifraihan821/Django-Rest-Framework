@@ -7,8 +7,8 @@ from product.models import Category,Product
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name','description', 'product_count']
-    product_count = serializers.IntegerField()
+        fields = ['id','name','description']
+    # product_count = serializers.IntegerField()
 
 """
     product_count = serializers.SerializerMethodField(method_name='get_product_count')

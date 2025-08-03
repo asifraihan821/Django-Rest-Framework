@@ -9,11 +9,22 @@ from rest_framework import status
 # Create your views here.
 
 
-@api_view()
+@api_view(['GET','PUT','DELETE'])
 def view_specific_product(request,id):
-    product = get_object_or_404(Product,pk=id)
-    serializer = ProductSerializer(product)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        product = get_object_or_404(Product,pk=id)
+        serializer = ProductSerializer(product,context={'request':request})
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        product = get_object_or_404(Product,pk=id)
+        serializer = ProductSerializer(data = request.data,context={'request':request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    if request.method == 'DELETE':
+        product = get_object_or_404(Product,pk=id)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

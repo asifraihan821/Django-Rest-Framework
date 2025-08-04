@@ -47,10 +47,24 @@ class ViewAllProducts(APIView):
 
 class ViewSpecificCategory(APIView):
     def get(self,request,id):
-        category = get_object_or_404(Category,pk=id)
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
 
+    def put(self,request,id):
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
+        serializer = CategorySerializer(category,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+    def delete(self,request,id):
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ViewCategories(APIView):

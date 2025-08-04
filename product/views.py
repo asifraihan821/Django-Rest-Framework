@@ -9,90 +9,25 @@ from rest_framework import status
 from rest_framework.views import APIView 
 from rest_framework.mixins import CreateModelMixin,ListModelMixin
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 # Create your views here.
 
 
-class ViewSpecificProduct(APIView):
-    def get(self,request,id):
-        product = get_object_or_404(Product,pk=id)
-        serializer = ProductSerializer(product,context={'request':request})
-        return Response(serializer.data)
-    
-    def put(self,request,id):
-        product = get_object_or_404(Product,pk=id)
-        serializer = ProductSerializer(data=request.data,context={'request':request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
-    def delete(self,request,id):
-        product = get_object_or_404(Product,pk=id)
-        product.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class ProductDetails(RetrieveUpdateDestroyAPIView):
+    queryset =  Product.objects.all()
+    serializer_class = ProductSerializer
 
-
-
-class ViewAllProducts(APIView):
-    def get(self,request):
-        product = Product.objects.select_related('category').all()
-        serializer = ProductSerializer(product,many=True,context={'request':request})
-        return Response(serializer.data)
-    
-    def post(self,request):
-        product = Product.objects.select_related('category').all()
-        serializer = ProductSerializer(data=request.data,context={'request':request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class ProductList(ListCreateAPIView):
     queryset = Product.objects.select_related('category').all()
     serializer_class = ProductSerializer
 
-    # def get_queryset(self):
-    #     return Product.objects.select_related('category').all()
-        # method should be user only for logic checkings
-    # def get_serializer_class(self):
-    #     return ProductSerializer
-    
-    # def get_serializer_context(self):
-    #     return {'request':self.request}
+
+class CategoryDetails(RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.annotate(product_count=Count('products')).all()
+    serializer_class = CategorySerializer
 
 
-class ViewSpecificCategory(APIView):
-    def get(self,request,id):
-        category = get_object_or_404(
-            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
-        serializer = CategorySerializer(category)
-        return Response(serializer.data)
-
-    def put(self,request,id):
-        category = get_object_or_404(
-            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
-        serializer = CategorySerializer(category,data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
-    def delete(self,request,id):
-        category = get_object_or_404(
-            Category.objects.annotate(product_count=Count('products')).all(),pk=id)
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class ViewCategories(APIView):
-    def get(self,request):
-        categories = Category.objects.annotate(product_count=Count('products')).all()
-        serializer = CategorySerializer(categories,many=True)
-        return Response(serializer.data)
-    
-    def post(self,request):
-        serializer = CategorySerializer(data=request.data)  #desirializer
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
 
 class CategoryList(ListCreateAPIView):
     queryset = Category.objects.annotate(product_count=Count('products')).all()

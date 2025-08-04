@@ -65,11 +65,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
     
-    category = serializers.HyperlinkedRelatedField(
-        queryset = Category.objects.all(),              #for hyperlink address for specific category
-        view_name = "view-specific-category",
+    # category = serializers.HyperlinkedRelatedField(
+    #     queryset = Category.objects.all(),              #for hyperlink address for specific category
+    #     view_name = "view-specific-category",
 
-    )
+    # )
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax_price')
 

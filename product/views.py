@@ -6,64 +6,61 @@ from product.models import Category,Product
 from product.serializers import ProductSerializer,CategorySerializer
 from django.db.models import Count
 from rest_framework import status
+from rest_framework.views import APIView 
 # Create your views here.
 
 
-@api_view(['GET','PUT','DELETE'])
-def view_specific_product(request,id):
-    if request.method == 'GET':
+class ViewSpecificProduct(APIView):
+    def get(self,request,id):
         product = get_object_or_404(Product,pk=id)
         serializer = ProductSerializer(product,context={'request':request})
         return Response(serializer.data)
-    if request.method == 'PUT':
+    
+    def put(self,request,id):
         product = get_object_or_404(Product,pk=id)
-        serializer = ProductSerializer(data = request.data,context={'request':request})
+        serializer = ProductSerializer(data=request.data,context={'request':request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
-    if request.method == 'DELETE':
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    
+    def delete(self,request,id):
         product = get_object_or_404(Product,pk=id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
-@api_view(['GET','POST'])
-def view_all_product(request):
-    if request.method == 'GET':
+class ViewAllProducts(APIView):
+    def get(self,request):
         product = Product.objects.select_related('category').all()
-        serializer = ProductSerializer(product, many=True,context={'request':request})
+        serializer = ProductSerializer(product,many=True,context={'request':request})
         return Response(serializer.data)
     
-    if request.method == 'POST':
+    def post(self,request):
+        product = Product.objects.select_related('category').all()
         serializer = ProductSerializer(data=request.data,context={'request':request})
         serializer.is_valid(raise_exception=True)
-        print(serializer._validated_data)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view()
-def view_specific_category(request,pk):
-    cat = get_object_or_404(Category,pk=pk)  
-    serializer = CategorySerializer(cat)
-    return Response(serializer.data)
+
+class ViewSpecificCategory(APIView):
+    def get(self,request,id):
+        category = get_object_or_404(Category,pk=id)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
 
 
-@api_view(['GET','POST'])
-def view_categoreis(request):
-    if request.method == 'GET':
+
+class ViewCategories(APIView):
+    def get(self,request):
         categories = Category.objects.annotate(product_count=Count('products')).all()
         serializer = CategorySerializer(categories,many=True)
         return Response(serializer.data)
     
-    if request.method == 'POST':
+    def post(self,request):
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer._validated_data)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

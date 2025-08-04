@@ -10,25 +10,24 @@ from rest_framework.views import APIView
 from rest_framework.mixins import CreateModelMixin,ListModelMixin
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 # Create your views here.
 
 
-class ProductDetails(RetrieveUpdateDestroyAPIView):
-    queryset =  Product.objects.all()
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        product = self.get_object()
+        if product.stock > 10:
+            return Response('product with stock more than 10 could not be deleted')
+        self.perform_destroy(product)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ProductList(ListCreateAPIView):
-    queryset = Product.objects.select_related('category').all()
-    serializer_class = ProductSerializer
 
 
-class CategoryDetails(RetrieveUpdateDestroyAPIView):
+class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.annotate(product_count=Count('products')).all()
     serializer_class = CategorySerializer
 
-
-
-class CategoryList(ListCreateAPIView):
-    queryset = Category.objects.annotate(product_count=Count('products')).all()
-    serializer_class = CategorySerializer

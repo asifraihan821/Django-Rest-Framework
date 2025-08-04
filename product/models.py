@@ -33,3 +33,15 @@ class Product(models.Model):
     
     
 
+class Review(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+
+#step to built an api
+#Model
+#Serializer
+#Viewset
+#Router

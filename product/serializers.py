@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from product.models import Category,Product
+from product.models import Category,Product,Review
 
 
 
@@ -80,3 +80,15 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError('Price could not be negetive')
         return price
+    
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'name', 'description']
+        #view theke to product id paileo seta emni emni assign hobe na tai create methd k override kore review ta bosate hobe
+    
+    def create(self, validated_data):
+        product_id = self.context['product_id'] #viewset theke context namei pabo tar moddhe product_id niye nilam
+        return Review.objects.create(product_id=product_id,**validated_data) #review lekha object ta return korlam same id diye r baki data gula unpack kore pathai dilam jno review ta set hoi
+

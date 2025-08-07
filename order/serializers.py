@@ -35,6 +35,13 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f'product with id {value} does not exist')
 
 
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
+
+
 class CartItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
     total_price = serializers.SerializerMethodField(method_name='get_total_price')

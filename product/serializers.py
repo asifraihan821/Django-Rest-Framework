@@ -1,22 +1,21 @@
 from rest_framework import serializers
 from decimal import Decimal
-from product.models import Category,Product
+from product.models import Category,Product,Review
 
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name','description']
-    # product_count = serializers.IntegerField()
+        fields = ['id','name','description','product_count']
+    product_count = serializers.IntegerField()
 
-"""
+
     product_count = serializers.SerializerMethodField(method_name='get_product_count')
                                         #query hitting too much
     def get_product_count(self,category):
         count = Product.objects.filter(category=category).count()
         return count
-"""
 
 
 # class ProductSerializer(serializers.Serializer):
@@ -66,11 +65,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
     
-    category = serializers.HyperlinkedRelatedField(
-        queryset = Category.objects.all(),              #for hyperlink address for specific category
-        view_name = "view-specific-category",
+    # category = serializers.HyperlinkedRelatedField(
+    #     queryset = Category.objects.all(),              #for hyperlink address for specific category
+    #     view_name = "view-specific-category",
 
-    )
+    # )
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax_price')
 
@@ -81,3 +80,15 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError('Price could not be negetive')
         return price
+    
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'name', 'description']
+        #view theke to product id paileo seta emni emni assign hobe na tai create methd k override kore review ta bosate hobe
+    
+    def create(self, validated_data):
+        product_id = self.context['product_id'] #viewset theke context namei pabo tar moddhe product_id niye nilam
+        return Review.objects.create(product_id=product_id,**validated_data) #review lekha object ta return korlam same id diye r baki data gula unpack kore pathai dilam jno review ta set hoi
+

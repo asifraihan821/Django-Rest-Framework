@@ -1,0 +1,84 @@
+[
+    {
+        "model" : "users.author",
+        "pk" : 1,
+        "fields" : {
+            "name" : "George R. R. Martin",
+            "biography" : "Author of the fantasy series A Song of Ice and Fire. "
+        }
+
+    },
+    {
+        "model" : "users.author",
+        "pk" : 2,
+        "fields" : {
+            "name" : " Martin Guptil",
+            "biography" : "Author of the fantasy series A Cricket Legend. "
+        }
+
+    },
+    {
+        "model" : "users.author",
+        "pk" : 3,
+        "fields" : {
+            "name" : "Samiel deor",
+            "biography" : "Author of the fantasy series A wonderful fregnance. "
+        }
+
+    },
+    {
+        "model": "books.book",
+        "pk" : 1,
+        "fields":{
+            "title": "Harry potter and the philosopher's Stone",
+            "author" : 1,
+            "isbn" : "1547896547",
+            "category" : "Fantasy",
+            "availability_status" : "AVAILABLE"
+        }
+    },
+    {
+        "model" : "books.book",
+        "pk" : "2",
+        "fields" : {
+            "title" : "A Game of Thrones",
+            "author" : 2,
+            "isbn" : "5478647812",
+            "category" : "Fantasy",
+            "availability_status" : "BORROWED"
+        }
+    },
+    {
+        "model" : "books.book",
+        "pk" : 3,
+        "fields" : {
+            "title" : "Padmoja",
+            "author" : 3,
+            "isbn" : "454774545",
+            "category" : "Novel",
+            "availability_status" : "RESERVED"
+        }
+    },
+    {
+        "model" : "books.book",
+        "pk" : 4,
+        "fields" : {
+            "title" : "JavaScript",
+            "author" : 1,
+            "isbn" : "454824545",
+            "category" : "Programming",
+            "availability_status" : "BORROWED"
+        }
+    },
+    {
+        "model" : "books.book",
+        "pk" : 5,
+        "fields" : {
+            "title" : "Python",
+            "author" : 2,
+            "isbn" : "454771545",
+            "category" : "coding",
+            "availability_status" : "BORROWED"
+        }
+    }
+]

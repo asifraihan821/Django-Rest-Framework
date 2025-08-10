@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from decimal import Decimal
 from product.models import Category,Product,Review
+from django.contrib.auth import get_user_model
+
 
 
 
@@ -82,13 +84,33 @@ class ProductSerializer(serializers.ModelSerializer):
         return price
     
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField                (method_name='get_current_user_name')
+
+    class Meta:
+        model = get_user_model()
+        fields = ['id', 'name']
+
+    def get_current_user_name(self,obj):
+        return obj.get_full_name()
+
+
 class ReviewSerializer(serializers.ModelSerializer):
+    # user = SimpleUserSerializer()
+    user = serializers.SerializerMethodField(method_name='get_user')
     class Meta:
         model = Review
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'user','ratings', 'product', 'comment']
+
+        read_only_fields = ['user', 'product']
         #view theke to product id paileo seta emni emni assign hobe na tai create methd k override kore review ta bosate hobe
     
+    def get_user(self,obj):
+        return SimpleUserSerializer(obj.user).data
+
     def create(self, validated_data):
         product_id = self.context['product_id'] #viewset theke context namei pabo tar moddhe product_id niye nilam
         return Review.objects.create(product_id=product_id,**validated_data) #review lekha object ta return korlam same id diye r baki data gula unpack kore pathai dilam jno review ta set hoi
+
+
 

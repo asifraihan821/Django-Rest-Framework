@@ -8,7 +8,7 @@ from django.core.validators import MinValueValidator
 
 class Cart(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4, editable=False)         # nijeder banano id
-    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='cart')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='cart')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

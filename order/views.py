@@ -29,13 +29,14 @@ class CartItemViewSet(ModelViewSet):
         elif self.request.method == 'PATCH':
             return UpdateCartItemSerializer
         return CartItemSerializer
-    
+
     def get_serializer_context(self):
         return {'cart_id': self.kwargs['cart_pk']}
 
     def get_queryset(self):
-        return CartItem.objects.select_related('product').filter(cart_id = self.kwargs['cart_pk'])
-    
+        return CartItem.objects.select_related('product').filter(cart_id=self.kwargs['cart_pk'])
+
+
 
 
 class OrderViewSet(ModelViewSet):
@@ -46,6 +47,9 @@ class OrderViewSet(ModelViewSet):
         if  self.request.method == 'POST':
             return CreateOrderSerializer
         return OrderSerializer
+    
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}
 
     def get_queryset(self):
         if self.request.user.is_staff:

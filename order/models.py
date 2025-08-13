@@ -61,3 +61,5 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+    
+    # price,total_price ta alada vabe ekhaneo rakha hoiche jno present price hisebe order hoi r ekhane kichu field add kora hoiche 

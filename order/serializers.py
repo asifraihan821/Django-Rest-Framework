@@ -118,18 +118,7 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         fields = ['status']
 
 
-    def update(self,instance,validated_data):
-        user= self.context['user']
-        new_status = validated_data['status']
-
-        if new_status == Order.CANCELED:
-            return OrderService.cancel_order(order=instance,user=user)
-        
-        if not user.is_staff:
-            raise serializers.ValidationError('detail: You are not allowe to delete this order')
-        
-        return super().update(instance,validated_data)
-
+    
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
     class Meta:

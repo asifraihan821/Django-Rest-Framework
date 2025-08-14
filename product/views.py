@@ -1,26 +1,25 @@
 from rest_framework.response import Response
-from product.models import Category,Product,Review
-from product.serializers import ProductSerializer,CategorySerializer,ReviewSerializer
-from django.db.models import Count
 from rest_framework import status
+from product.models import Product, Category, Review
+from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
+from django.db.models import Count
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter,OrderingFilter
 from product.filters import ProductFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from product.paginations import DefaultPagination
-from api.permissions import IsAdminOrReadOnly,FullDjangoModelPermission
-from rest_framework.permissions import DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
+from api.permissions import IsAdminOrReadOnly, FullDjangoModelPermission
+from rest_framework.permissions import DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly
 from product.permissions import IsReviewAuthorOrReadOnly
-# Create your views here.
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
-    pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
-    search_fields = ['name', 'description', 'category__name']
+    pagination_class = DefaultPagination
+    search_fields = ['name', 'description']
     ordering_fields = ['price', 'updated_at']
     # permission_classes = [IsAdminUser]
     permission_classes = [IsAdminOrReadOnly]
@@ -29,31 +28,29 @@ class ProductViewSet(ModelViewSet):
 
     # def get_permissions(self):
     #     if self.request.method == 'GET':
-    #         return[AllowAny()]
+    #         return [AllowAny()]
     #     return [IsAdminUser()]
-        
 
     def destroy(self, request, *args, **kwargs):
         product = self.get_object()
         if product.stock > 10:
-            return Response('product with stock more than 10 could not be deleted')
+            return Response({'message': "Product with stock more than 10 could not be deleted"})
         self.perform_destroy(product)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
 class CategoryViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Category.objects.annotate(product_count=Count('products')).all()
+    queryset = Category.objects.annotate(
+        product_count=Count('products')).all()
     serializer_class = CategorySerializer
-
 
 
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewAuthorOrReadOnly]
 
-    def perform_create(self,serializer):
+    def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
     def perform_update(self, serializer):
@@ -63,7 +60,4 @@ class ReviewViewSet(ModelViewSet):
         return Review.objects.filter(product_id=self.kwargs['product_pk'])
 
     def get_serializer_context(self):
-        return {'product_id':self.kwargs['product_pk']}
-            # sob viewset a eka kwargs thake seta Dict. akare thake.
-            #context akare product_id ta k pathailam viewset a thaka product_pk name er value ta
-            # jate serializer ta product_id ta pai jetai ami review debo
+        return {'product_id': self.kwargs['product_pk']}

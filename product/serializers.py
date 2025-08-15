@@ -12,12 +12,19 @@ class CategorySerializer(serializers.ModelSerializer):
     product_count = serializers.IntegerField(read_only=True)
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = ['id', 'name', 'description', 'price',
-                  'stock', 'category', 'price_with_tax']  # other
+                  'stock', 'category', 'price_with_tax','images']  # other
 
     price_with_tax = serializers.SerializerMethodField(
         method_name='calculate_tax')
@@ -29,14 +36,6 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError('Price could not be negative')
         return price
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ['id', 'image']
-
-
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):

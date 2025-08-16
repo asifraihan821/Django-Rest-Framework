@@ -1,32 +1,71 @@
-# PhiMart - An eCommerce DRF Project
+# 🎬 Phimart API
 
-This is a restful api for building an eCommerce using Django rest framework
+Phimart is a **Django REST Framework (DRF)** based e-commerce backend that provides API endpoints for managing products, categories, carts, and orders.  
+It includes **JWT authentication (Djoser)** for secure user management and **Swagger (drf_yasg)** for interactive API documentation.
 
-## Feature
-* **Authenticate & Authorization**
-* **Product Management:** CRUD operations for products
-- for ordering
-    - inside ordering
-        - more inside ordering
-            - extra ordering
+---
 
-1. Number
-2. for numerically ordering
-    - more
-    - jfk
+## 🚀 Features
 
+- ✅ JWT Authentication (using Djoser)  
+- ✅ Product Management (CRUD APIs)  
+- ✅ Categories Management  
+- ✅ Shopping Cart APIs  
+- ✅ Orders & Checkout APIs  
+- ✅ Swagger & Redoc API Documentation  
 
-|Header1|Header2|Header3|
-| --- | --- | --- |
-| This | is a | table |
-| This | is 2nd | row |
-| This | is 3rd | row |
+---
 
+## 📦 Tech Stack
 
-``` 
-    git bash
- git add .
- def func(jk,kal):
+- **Backend:** Django, Django REST Framework  
+- **Authentication:** JWT (via Djoser)  
+- **Documentation:** drf_yasg (Swagger / Redoc)  
+- **Database:** SQLite / PostgreSQL (configurable)  
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```
+bash
+git clone https://github.com/your-username/phimart.git
+cd phimart
 ```
 
-![Octocat](https://user-images.githubusercontent.com/81953271/124010886-b571ca80-d9df-11eb-86ac-b358c48ac6aa.png "Github logo") 
+```
+python -m venv venv
+source venv/bin/activate   # On Linux/Mac
+venv\Scripts\activate      # On Windows 
+```
+
+```
+pip install -r requirements.txt
+```
+
+```
+python manage.py migrate
+```
+
+```
+python manage.py createsuperuser
+```
+
+```
+python manage.py runserver
+```
+
+```
+POST /auth/jwt/create/
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
+
+
+
+---
+

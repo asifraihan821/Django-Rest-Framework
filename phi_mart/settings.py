@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'django_filters',
     'djoser',
     'rest_framework',
@@ -134,6 +135,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -163,4 +166,15 @@ DJOSER = {
         'user_create' : 'users.serializers.UserCreateSerializer',
         'current_user' : 'users.serializers.UserSerializer'
     },
+}
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description' : 'Enter your JWT token in the format: `JWT <your_token>`'
+      }
+   }
 }

@@ -21,7 +21,34 @@
         "model" : "users.author",
         "pk" : 3,
         "fields" : {
-            "name" : "Samiel deor",
+            "name" : "Cristiano Ronaldo",
+            "biography" : "Author of the fantasy series A wonderful fregnance. "
+        }
+
+    },
+    {
+        "model" : "users.author",
+        "pk" : 4,
+        "fields" : {
+            "name" : "mariana Trance",
+            "biography" : "Author of the fantasy series A wonderful fregnance. "
+        }
+
+    },
+    {
+        "model" : "users.author",
+        "pk" : 5,
+        "fields" : {
+            "name" : "Sharlok Homme",
+            "biography" : "Author of the fantasy series A wonderful fregnance. "
+        }
+
+    },
+    {
+        "model" : "users.author",
+        "pk" : 6,
+        "fields" : {
+            "name" : "David Warner",
             "biography" : "Author of the fantasy series A wonderful fregnance. "
         }
 

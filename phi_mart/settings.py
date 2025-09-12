@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from decouple import config
 from pathlib import Path
 from datetime import timedelta
-from decouple import config
 import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -200,12 +200,10 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'EMAIL_FRONTEND_PROTOCOL': config('FRONTEND_PROTOCOL'),
-    'EMAIL_FRONTEND_DOMAIN': config('FRONTEND_DOMAIN'),
     'EMAIL_FRONTEND_SITE_NAME':'PhiMart',
-    'SEND_ACTIVATION_EMAIL': True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL':'activate/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user_create' : 'users.serializers.UserCreateSerializer',
         'current_user' : 'users.serializers.UserSerializer'
@@ -222,3 +220,10 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')

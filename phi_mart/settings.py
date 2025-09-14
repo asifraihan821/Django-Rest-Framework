@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from decouple import config
+
 from pathlib import Path
 from datetime import timedelta
 import cloudinary
@@ -110,6 +110,8 @@ CORS_ALLOWED_ORIGINS = [
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+from decouple import config
 
 DATABASES = {
     'default': {

@@ -29,6 +29,9 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
         return Cart.objects.prefetch_related('items__product').filter(user=self.request.user)
 
     def create(self,request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+
         existing_cart = Cart.objects.filter(user=request.user).first()
 
         if existing_cart:

@@ -32,20 +32,14 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
         if not request.user.is_authenticated:
             return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # existing_cart = Cart.objects.filter(user=request.user).first()
+        existing_cart = Cart.objects.filter(user=request.user).first()
 
-        # if existing_cart:
-        #     serializer = self.get_serializer(existing_cart)
-        #     return Response(serializer.data, status=status.HTTP_200_OK)
+        if existing_cart:
+            serializer = self.get_serializer(existing_cart)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        # return super().create(request, *args, **kwargs)
-        cart, created = Cart.objects.get_or_create(user=request.user)
+        return super().create(request, *args, **kwargs)
         
-        serializer = self.get_serializer(cart)
-        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-
-
-
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 

@@ -33,12 +33,13 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
             return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
 
         existing_cart = Cart.objects.filter(user=request.user).first()
-
+                            # jodi cart thake
         if existing_cart:
             serializer = self.get_serializer(existing_cart)
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return super().create(request, *args, **kwargs)
+    
         
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']

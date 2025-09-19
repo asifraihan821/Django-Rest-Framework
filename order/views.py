@@ -28,18 +28,14 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
             return Cart.objects.none()
         return Cart.objects.prefetch_related('items__product').filter(user=self.request.user)
 
-    def create(self,request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        existing_cart = Cart.objects.filter(user=request.user).first()
-                            # jodi cart thake
-        if existing_cart:
-            serializer = self.get_serializer(existing_cart)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        return super().create(request, *args, **kwargs)
-    
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
         
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']

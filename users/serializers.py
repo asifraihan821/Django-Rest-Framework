@@ -1,4 +1,8 @@
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer as BaseUserSerializer
+from rest_framework import serializers
+from djoser.serializers import (
+    UserCreateSerializer as BaseUserCreateSerializer,
+    UserSerializer as BaseUserSerializer,
+)
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
@@ -6,7 +10,9 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 
 class UserSerializer(BaseUserSerializer):
+    is_staff = serializers.BooleanField(read_only=True)
+
     class Meta(BaseUserSerializer.Meta):
         ref_name = 'CustomUser'
-        fields = ['id', 'email', 'first_name', 'last_name', 'address', 'phone_number', 'is_staff',]
+        fields = ['id', 'email', 'first_name', 'last_name', 'address', 'phone_number', 'is_staff']
         read_only_fields = ['is_staff']
